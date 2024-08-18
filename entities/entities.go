@@ -5,6 +5,13 @@ import (
 	"net/smtp"
 )
 
+type SMTPClient interface {
+	authenticate(hostData EmailHost) (smtp.Auth, string)
+	sendMail(addr string, auth smtp.Auth, from string, to []string, msg []byte) error
+}
+
+type SMTPClientSender struct{}
+
 type EmailHost struct {
 	Host     string
 	Port     int
@@ -17,18 +24,28 @@ type Email struct {
 	To       string
 	Body     string
 	HostData EmailHost
+	Client   SMTPClient
+}
+
+func (s *SMTPClientSender) authenticate(hostData EmailHost) (smtp.Auth, string) {
+	auth := smtp.PlainAuth(
+		"",
+		hostData.Username,
+		hostData.Password,
+		hostData.Host,
+	)
+	address := fmt.Sprintf("%s:%d", hostData.Host, hostData.Port)
+	return auth, address
+}
+
+func (s *SMTPClientSender) sendMail(addr string, a smtp.Auth, from string, to []string, msg []byte) error {
+	return smtp.SendMail(addr, a, from, to, msg)
 }
 
 func (s *Email) SendEmail() error {
-	auth := smtp.PlainAuth(
-		"",
-		s.HostData.Username,
-		s.HostData.Password,
-		s.HostData.Host,
-	)
-	address := fmt.Sprintf("%s:%d", s.HostData.Host, s.HostData.Port)
+	auth, address := s.Client.authenticate(s.HostData)
 
-	err := smtp.SendMail(address, auth, s.From, []string{s.To}, []byte(s.Body))
+	err := s.Client.sendMail(address, auth, s.From, []string{s.To}, []byte(s.Body))
 	if err != nil {
 		return fmt.Errorf("failed to send email: %v", err)
 	}

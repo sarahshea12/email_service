@@ -12,6 +12,7 @@ func SendPrimaryEmail(recipient string, body string) error {
 		To:       recipient,
 		Body:     body,
 		HostData: hostData,
+		Client:   &entities.SMTPClientSender{},
 	}
 
 	return email.SendEmail()
@@ -24,6 +25,7 @@ func SendSecondaryEmail(recipient string, body string) error {
 		To:       recipient,
 		Body:     body,
 		HostData: hostData,
+		Client:   &entities.SMTPClientSender{},
 	}
 
 	return email.SendEmail()
