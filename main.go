@@ -24,7 +24,6 @@ func main() {
 		return
 	}
 
-	// try except block, check return if nil then it was successful
 	primaryErr := services.SendPrimaryEmail(recipient, message)
 	if primaryErr != nil {
 		secondaryErr := services.SendSecondaryEmail(recipient, message)

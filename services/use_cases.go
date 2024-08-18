@@ -7,15 +7,11 @@ import (
 
 func SendPrimaryEmail(recipient string, body string) error {
 	hostData := config.GetProviderDetails("primary")
-	sender := config.Sender
 	email := entities.Email{
-		From:         sender,
-		To:           recipient,
-		SMTPUsername: hostData.Username,
-		SMTPPassword: hostData.Password,
-		Host:         hostData.Host,
-		Port:         hostData.Port,
-		Body:         body,
+		From:     config.Sender,
+		To:       recipient,
+		Body:     body,
+		HostData: hostData,
 	}
 
 	return email.SendEmail()
@@ -23,16 +19,12 @@ func SendPrimaryEmail(recipient string, body string) error {
 
 func SendSecondaryEmail(recipient string, body string) error {
 	hostData := config.GetProviderDetails("secondary")
-	sender := config.Sender
 	email := entities.Email{
-		From:         sender,
-		To:           recipient,
-		SMTPUsername: hostData.Username,
-		SMTPPassword: hostData.Password,
-		Host:         hostData.Host,
-		Port:         hostData.Port,
-		Body:         body,
+		From:     config.Sender,
+		To:       recipient,
+		Body:     body,
+		HostData: hostData,
 	}
 
 	return email.SendEmail()
-} // TODO: add helper to reduce duplication
+}

@@ -13,18 +13,20 @@ type EmailHost struct {
 }
 
 type Email struct {
-	From         string
-	To           string
-	SMTPUsername string
-	SMTPPassword string
-	Host         string
-	Port         int
-	Body         string
-} // TODO: make a field EmailHost instead of duplicating fields
+	From     string
+	To       string
+	Body     string
+	HostData EmailHost
+}
 
 func (s *Email) SendEmail() error {
-	auth := smtp.PlainAuth("", s.SMTPUsername, s.SMTPPassword, s.Host)
-	address := fmt.Sprintf("%s:%d", s.Host, s.Port)
+	auth := smtp.PlainAuth(
+		"",
+		s.HostData.Username,
+		s.HostData.Password,
+		s.HostData.Host,
+	)
+	address := fmt.Sprintf("%s:%d", s.HostData.Host, s.HostData.Port)
 
 	err := smtp.SendMail(address, auth, s.From, []string{s.To}, []byte(s.Body))
 	if err != nil {
