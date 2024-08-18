@@ -10,6 +10,8 @@ mailtrap: https://mailtrap.io/
 Amazon SES: https://docs.aws.amazon.com/ses/
 
 ## Usage
+With docker installed:
 ```bash
-go run main.go
+docker build -t go-email-service .
+docker run -it go-email-service
 ```
