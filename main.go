@@ -6,6 +6,17 @@ import (
 	services "github.com/sarahshea12/email_service/services"
 )
 
+func sendCascadingEmail(recipient string, message string) error {
+	primaryErr := services.SendPrimaryEmail(recipient, message)
+	if primaryErr != nil {
+		secondaryErr := services.SendSecondaryEmail(recipient, message)
+		if secondaryErr != nil {
+			fmt.Println("Failed to send emails")
+		}
+	}
+	return nil
+}
+
 func main() {
 	var message string
 	var recipient string
@@ -24,11 +35,5 @@ func main() {
 		return
 	}
 
-	primaryErr := services.SendPrimaryEmail(recipient, message)
-	if primaryErr != nil {
-		secondaryErr := services.SendSecondaryEmail(recipient, message)
-		if secondaryErr != nil {
-			fmt.Println("Failed to send emails: %v %v", primaryErr, secondaryErr)
-		}
-	}
+	sendCascadingEmail(recipient, message)
 }

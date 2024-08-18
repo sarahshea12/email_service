@@ -5,7 +5,7 @@ import (
 	entities "github.com/sarahshea12/email_service/entities"
 )
 
-func SendPrimaryEmail(recipient string, body string) error {
+var SendPrimaryEmail = func(recipient string, body string) error {
 	hostData := config.GetProviderDetails("primary")
 	email := entities.Email{
 		From:     config.Sender,
@@ -18,7 +18,7 @@ func SendPrimaryEmail(recipient string, body string) error {
 	return email.SendEmail()
 }
 
-func SendSecondaryEmail(recipient string, body string) error {
+var SendSecondaryEmail = func(recipient string, body string) error {
 	hostData := config.GetProviderDetails("secondary")
 	email := entities.Email{
 		From:     config.Sender,
