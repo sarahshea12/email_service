@@ -15,3 +15,7 @@ With docker installed:
 docker build -t go-email-service .
 docker run -it go-email-service
 ```
+## Testing
+```bash
+go test *.go
+```
