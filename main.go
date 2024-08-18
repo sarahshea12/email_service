@@ -12,6 +12,7 @@ func sendCascadingEmail(recipient string, message string) error {
 		secondaryErr := services.SendSecondaryEmail(recipient, message)
 		if secondaryErr != nil {
 			fmt.Println("Failed to send emails")
+			return secondaryErr
 		}
 	}
 	return nil
